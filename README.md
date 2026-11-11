@@ -1,50 +1,86 @@
-NetBSD
-======
+DarkBSD
+========
 
-NetBSD is a free, fast, secure, and highly portable Unix-like Open
-Source operating system.  It is available for a [wide range of
-platforms](https://wiki.NetBSD.org/ports/), from large-scale servers
-and powerful desktop systems to handheld and embedded devices.
+DarkBSD is a free, fast, secure, and highly portable Unix-like Open
+Source operating system derived from NetBSD.  It keeps the NetBSD
+kernel and userland, but reduces the supported hardware set and
+replaces the package management stack with XBPS.  The result is a
+smaller, more focused system intended for desktop use, with server use
+as a secondary goal.
+
+Supported Platforms
+-------------------
+
+DarkBSD currently targets:
+
+- amd64 (x86_64)
+- arm64 / aarch64 (evbarm)
+
+Support for riscv is under preparation and should be considered
+experimental.
+
+The supported platform list is intentionally small.  This keeps the
+build and test matrix manageable and allows the system to be tuned for
+the remaining platforms.
+
+Package Management
+------------------
+
+DarkBSD uses XBPS as its binary package manager.  The XBPS runtime
+tools are built natively with the NetBSD build system.  The legacy
+pkg_install and pkgin front ends are being retired.
 
 Building
 --------
 
-You can cross-build NetBSD from most UNIX-like operating systems.
-To build for amd64 (x86_64), in the src directory:
+You can cross-build DarkBSD from most UNIX-like operating systems.
+To build for amd64 (x86_64), in the source directory:
 
-    ./build.sh -U -u -j4 -m amd64 -O ~/obj release
+    ./build.sh -U -u -j4 -m amd64 -O ~/obj \
+        -V BUILD_tests=no -V BUILD_games=no build
 
-Additional build information available in the [BUILDING](BUILDING) file.
+To build for arm64 (evbarm/aarch64):
 
-Binaries
+    ./build.sh -U -u -j4 -m evbarm -a aarch64 -O ~/obj \
+        -V BUILD_tests=no -V BUILD_games=no build
+
+The `build` target produces a complete build tree.  The `release`
+target produces installation sets and media.  Pass the same `-V`
+options to keep tests and games disabled.  Additional build
+information is available in the [BUILDING](BUILDING) file.
+
+Releases
 --------
 
-- [Daily builds](https://nycdn.NetBSD.org/pub/NetBSD-daily/HEAD/latest/)
-- [Releases](https://cdn.NetBSD.org/pub/NetBSD/)
+There are no official DarkBSD releases yet.  The source tree is the
+primary distribution.
 
 Testing
 -------
 
-On a running NetBSD system:
+On a running DarkBSD system:
 
     cd /usr/tests; atf-run | atf-report
+
+The test suite is inherited from NetBSD.  It is not included in the
+example build commands above; enable it with `-V BUILD_tests=yes` when
+needed.
 
 Troubleshooting
 ---------------
 
-- Send bugs and patches [via web form](https://www.NetBSD.org/cgi-bin/sendpr.cgi?gndb=netbsd).
-- Subscribe to the [mailing lists](https://www.NetBSD.org/mailinglists/).
-  The [netbsd-users](https://www.NetBSD.org/mailinglists/#netbsd-users) list is a good choice for many problems; watch [current-users](https://www.NetBSD.org/mailinglists/#current-users) if you follow the bleeding edge of NetBSD-current.
-- Join the community IRC channel [#netbsd @ libera.chat](https://web.libera.chat/#netbsd).
+- Report bugs and patches via the [GitHub issue tracker](https://github.com/afolouyou/darkbsd/issues).
+- For NetBSD-specific questions, the upstream [NetBSD documentation](https://www.NetBSD.org/docs/) and mailing lists may still be useful.
 
-Latest sources
+Latest Sources
 --------------
 
-To fetch the main CVS repository:
+To clone the DarkBSD source tree:
 
-    cvs -d anoncvs@anoncvs.NetBSD.org:/cvsroot checkout -P src
+    git clone https://github.com/afolouyou/darkbsd.git
 
-To work in the Git mirror, which is updated every few hours from CVS:
+DarkBSD tracks NetBSD-current.  The upstream NetBSD source tree is
+available at:
 
     git clone https://github.com/NetBSD/src.git
 
@@ -54,3 +90,4 @@ Additional Links
 - [The NetBSD Guide](https://www.NetBSD.org/docs/guide/en/)
 - [NetBSD manual pages](https://man.NetBSD.org/)
 - [NetBSD Cross-Reference](https://nxr.NetBSD.org/)
+- [XBPS package manager](https://github.com/void-linux/xbps)
